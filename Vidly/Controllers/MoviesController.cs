@@ -4,21 +4,33 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Vidly.Models;
+
 namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
-        // GET: Movies/Random
-        public ActionResult Random()
+        // GET: Movies
+        public ActionResult Index()
         {
-            var movie = new Movie() { Name = "Shrek" };
+            var movies = GetMovies();
+            return View(movies);
+        }
+        public ActionResult Details(int id)
+        {
+            var movie = GetMovies().SingleOrDefault(c => c.Id == id);
+
+            if (movie == null)
+                return HttpNotFound();
             return View(movie);
         }
 
-        [Route("movies/released/{year:regex(\\d{4})}/{month:regex(\\d{2}): range(1,12)}")]
-        public ActionResult ByReleaseDate(int year, int month)
+        private IEnumerable<Movie> GetMovies()
         {
-            return Content(year + "/" + month);
+            return new List<Movie>
+            {
+                new Movie {Id = 1, Name = "Pokemon"},
+                new Movie {Id = 2, Name = "It's a Wonderful Life"}
+            };
         }
     }
 }
